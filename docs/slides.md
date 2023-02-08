@@ -24,7 +24,7 @@ class: middle, center
   * Test frameworks
 * Warmup exercise
   * Miro
-* Testing React
+* React Testing Library
   * Show you how you can test React in a unit test fashion
   * Then you can get some hands on experience for writing such tests
   * Exchange experience from the exercise and think about what makes testing hard
@@ -43,12 +43,11 @@ Why a workshop about testing?
 
 ???
 
-* Important part of software development
 * An important part of software development is about minimizing the costs of changes
 * Helps to come up with a good software design
   * Testing gets more difficult if good design principles are violated
-  * Single-Responsibility-Principle: Violation normally means a change leads
-    to the adoption of many tests
+  * Single-Responsibility-Principle: Violation normally means a change results
+    in changes to many tests cases
   * Interface-Segregation-Prinziple: Violation makes mocking hard due to the
     amount of methods interfaces have
   * Inversion of control and dependency injection: Violation makes mocking
@@ -82,14 +81,6 @@ What do we need for testing React applications?
 
 class: middle, center
 
-# Fake Environment
-
-Node.JS runtime with jsdom or happy-dom
-
----
-
-class: middle, center
-
 # Real Browser
 
 Remote control a browser
@@ -102,6 +93,20 @@ Different protocols:
 * TestCafe
 * DevTools Protocol (Playwright)
 * Browserstack for cross browser and OS tests
+
+---
+
+class: middle, center
+
+# Fake Environment
+
+Node.js runtime with jsdom or happy-dom
+
+???
+
+* Node.js doesn't support browser API's like DOM
+* Your code will run in a browser and therefore has to use browser API's and no Node.js API's
+* Those fake environments bring the browser API's to Node.js
 
 ---
 
@@ -121,9 +126,11 @@ Pros and Cons
 * A fake environment is more lightweight (memory and performance wise) than starting a browser
 * It is easier to mock external dependencies within a fake environment
 * Generating coverage reports is much easier in fake environments
+* Debugging a test is much easier with a fake environment
+* Accidental use of Node.js API is possible in fake environments
+* You might have to provide your own polyfills for API's not supported by jsdom or happy-dom
 * A real browser gives you much more confidence that your code is correct
 * A real browser allows you to take screenshots and see what is going on
-
 
 ---
 
@@ -148,6 +155,143 @@ When to use what?
 * Integration test of multiple frontend components or of the frontend with the backend: Both environment
   types may work for you. HTTP calls are covered by jsdom or happy-dom.
 * Performance tests should most likely be done in a real browser
+
+---
+
+class: middle, center
+
+# React Testing Library
+
+---
+
+class: middle
+
+# Vitest setup
+
+__package.json__
+```json
+  "devDependencies": {
+    "@testing-library/react": "13.4.0",
+    "jsdom": "21.0.0"
+  }
+```
+
+__vite.config.ts__
+```typescript
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+*   environment: 'jsdom'
+  },
+})
+```
+
+---
+
+# Usage
+
+__Render components__
+```tsx
+import { render } from '@testing-library/react'
+
+const onClick = () => {}
+const title = 'Press me'
+const {getByRole, queryByRole, findByRole} = render(<button onClick={onClick}>{title}</button>)
+```
+
+__Querying the DOM__
+```tsx
+import { screen } from '@testing-library/react'
+
+const button = screen.getByRole('button')
+const heading = screen.queryByRole('heading')
+const awaitedButton = await screen.findByRole('button')
+```
+
+---
+
+# Assertions
+
+__package.json__
+```json
+  "devDependencies": {
+    "@testing-library/jest-dom": "5.16.5"
+  }
+```
+
+__vite.config.ts__
+```typescript
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: 'jsdom',
+*   setupFiles: ['./src/testSetup.ts'],
+  },
+})
+```
+
+---
+
+class: middle
+
+__testSetup.ts__
+```typescript
+import { expect } from 'vitest'
+import matchers from '@testing-library/jest-dom/matchers'
+
+expect.extend(matchers)
+```
+
+__*.spec.tsx__
+```tsx
+const element = screen.getByText('Hello World!')
+
+expect(element).toHaveTextContent('Hello World!')
+expect(element).toBeVisible()
+expect(element).toBeEnabled()
+expect(element).toHaveFocus()
+
+await waitFor(() => {
+  expect(screen.getByText('Hello World!')).toBeVisible()
+})
+```
+
+---
+
+# Interaction
+
+__package.json__
+```json
+  "devDependencies": {
+    "@testing-library/user-event": "14.4.3"
+  }
+```
+
+__*.spec.tsx__
+```tsx
+import userEvent from '@testing-library/user-event'
+
+const user = userEvent.setup()
+
+render(<button>Button</button>)
+
+user.click(screen.getByRole('button'))
+```
+
+---
+
+class: middle, center
+
+# Cheatsheet
+
+
+__src/App.spec.tsx__
 
 ---
 
