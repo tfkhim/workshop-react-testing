@@ -291,7 +291,7 @@ class: middle, center
 # Cheatsheet
 
 
-__src/App.spec.tsx__
+__src/Cheatsheet.spec.tsx__
 
 ---
 
