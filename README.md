@@ -1,7 +1,6 @@
 This project contains slides and exercises for a company internal workshop.
 
-Notes for Participants
-======================
+# Notes for Participants
 
 You will need to run some test cases as part of the exercises. The project
 uses [Vitest](https://vitest.dev/) as a test framework.
@@ -25,14 +24,12 @@ It is also possible to start the test runner in watch mode
 The test runner will then re-run the test cases if a source or test files
 changes.
 
-Slides
-======
+# Slides
 
 The slides use [remark](https://github.com/gnab/remark) and are hosted
 at the projects [GitHub page](https://tfkhim.github.io/workshop-react-testing).
 
-Local Development
------------------
+## Local Development
 
 The project uses [Vite](https://vitejs.dev/) as a development server.
 You can start it with the following command
