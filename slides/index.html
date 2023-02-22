@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Testing</title>
+    <meta charset="utf-8" />
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>React Testing</h1>
+
+          <a href="https://github.com/tfkhim/workshop-react-testing"
+            >Project source on GitHub</a
+          >
+        </section>
+
+        <section>
+          <h1>Agenda</h1>
+          <ul>
+            <li>Introduction to web frontend testing</li>
+            <li>Warmup exercise</li>
+            <li>React Testing Library</li>
+            <li>Exercise</li>
+            <li>Tips & Tricks to improve testability</li>
+          </ul>
+
+          <aside class="notes" data-markdown>
+            <textarea data-template>
+              - Introduction
+                - Motivation
+                - Goals
+                - Test environments
+                - Test frameworks
+              - Warmup exercise
+                - Miro
+              - React Testing Library
+                - Show you how you can test React in a unit test fashion
+                - Then you can get some hands on experience for writing such tests
+                - Exchange experience from the exercise and think about what makes testing hard
+              - Tips & Tricks
+                - Show you some approaches, techniques and their disadvantages
+                - Another hands on experience
+                - Some discussion (because as with everything in software development: it always depends)
+            </textarea>
+          </aside>
+        </section>
+
+        <section>
+          <h1>Why a workshop about testing?</h1>
+
+          <aside class="notes" data-markdown>
+            <textarea data-template>
+              - An important part of software development is about minimizing the costs of changes
+              - Helps to come up with a good software design
+                - Testing gets more difficult if good design principles are violated
+                - Single-Responsibility-Principle: Violation normally means a change results
+                  in changes to many tests cases
+                - Interface-Segregation-Prinziple: Violation makes mocking hard due to the
+                  amount of methods interfaces have
+                - Inversion of control and dependency injection: Violation makes mocking
+                  hard or impossible
+              - You get an early look at the client side
+                - How readable is the calling site
+                - Ergonomic API
+              - Manual testing is expensive and boring
+                - Boring tasks diminish motivation
+                - Boring tasks lead to errors
+              - It gives us confidence that our changes do no harm
+              - Bringing together people from different teams
+                - Each team faced different problems over time
+                - And might have develop their own approaches to solve them
+                - Exchanging them might result in an even better solution for them
+            </textarea>
+          </aside>
+        </section>
+
+        <section>
+          <h1>Decisions</h1>
+          <ol>
+            <li>Test environment</li>
+            <li>Test framework</li>
+          </ol>
+
+          <aside class="notes">
+            What do we need for testing React applications?
+          </aside>
+        </section>
+
+        <section>
+          <h1>Real Browser</h1>
+          Remote control a browser
+
+          <aside class="notes" data-markdown>
+            <textarea data-template>
+              Different protocols:
+
+              - WebDriver (Selenium)
+              - TestCafe
+              - DevTools Protocol (Playwright)
+              - Browserstack for cross browser and OS tests
+            </textarea>
+          </aside>
+        </section>
+
+        <section>
+          <h1>Fake Environment</h1>
+          Node.js runtime with jsdom or happy-dom
+
+          <aside class="notes" data-markdown>
+            <textarea data-template>
+              - Node.js doesn't support browser API's like DOM
+              - Your code will run in a browser and therefore has to use browser API's and no Node.js API's
+              - Those fake environments bring the browser API's to Node.js
+            </textarea>
+          </aside>
+        </section>
+
+        <section>
+          <h1>Test Framework</h1>
+
+          <p>
+            For a fake environment most Node.js test frameworks can be used. For
+            example Jest, Mocha or Vitest. Combine them with
+            <a href="https://testing-library.com/">React Testing Library</a> to
+            simplify writing tests.
+          </p>
+
+          <p>
+            For testing with a real browser there are also plenty of options.
+            <a href="https://testcafe.io/">TestCafe</a> or
+            <a href="https://playwright.dev/">Playwright</a> are two popular
+            choices.
+          </p>
+
+          <aside class="notes" data-markdown>
+            <textarea data-template>
+              Pros and Cons
+
+              - A fake environment is more lightweight (memory and performance wise) than starting a browser
+              - It is easier to mock external dependencies within a fake environment
+              - Generating coverage reports is much easier in fake environments
+              - Debugging a test is much easier with a fake environment
+              - Accidental use of Node.js API is possible in fake environments
+              - You might have to provide your own polyfills for API's not supported by jsdom or happy-dom
+              - A real browser gives you much more confidence that your code is correct
+              - A real browser allows you to take screenshots and see what is going on
+            </textarea>
+          </aside>
+        </section>
+
+        <section>
+          <h1>Warmup</h1>
+
+          <p>
+            Think of different kinds of tests for a web based frontend
+            application.
+          </p>
+
+          <p>Which kind of environment would you use for that kind of test?</p>
+
+          <aside class="notes" data-markdown>
+            <textarea data-template>
+              Timebox: 10 Minutes
+
+              - 2 Minutes collecting
+              - 8 Minutes presentation and discussion
+
+              When to use what?
+
+              - A fake environment works good for tests that focus on complex logic with limited browser API interaction
+              - Testing any kind of visual appearance or layout makes only sense in a real browser
+              - Obviously use a real browser if you want to make sure your code is compatible to a specific browser
+              - Integration test of multiple frontend components or of the frontend with the backend: Both environment
+                types may work for you. HTTP calls are covered by jsdom or happy-dom.
+              - Performance tests should most likely be done in a real browser
+            </textarea>
+          </aside>
+        </section>
+
+        <section>
+          <h1>React Testing Library</h1>
+        </section>
+
+        <section>
+          <h1>Vitest setup</h1>
+
+          <p>package.json</p>
+
+          <pre><code class="language-json" data-trim>
+            "devDependencies": {
+              "@testing-library/react": "13.4.0",
+              "jsdom": "21.0.0"
+            }
+          </code></pre>
+
+          <p>vite.config.ts</p>
+
+          <pre><code class="language-tsx" data-trim data-line-numbers="7" data-hide-line-numbers>
+            import react from '@vitejs/plugin-react'
+            import { defineConfig } from 'vitest/config'
+
+            export default defineConfig({
+              plugins: [react()],
+              test: {
+                environment: 'jsdom'
+              },
+            })
+          </code></pre>
+        </section>
+
+        <section>
+          <h1>Usage</h1>
+
+          <p>Render components</p>
+
+          <pre><code class="language-tsx" data-trim><script type="text/template">
+            import { render } from '@testing-library/react'
+
+            const onClick = () => {}
+            const { getByRole, queryByRole, findByRole } = render(
+              <button onClick={onClick}>Press me</button>
+            )
+          </script></code></pre>
+
+          <p>Querying the DOM</p>
+
+          <pre><code class="language-tsx" data-trim>
+            import { screen } from '@testing-library/react'
+
+            const button = screen.getByRole('button')
+            const heading = screen.queryByRole('heading')
+            const awaitedButton = await screen.findByRole('button')
+          </code></pre>
+        </section>
+
+        <section>
+          <section>
+            <h1>Assertions</h1>
+
+            <p>package.json</p>
+
+            <pre><code class="language-json" data-trim>
+              "devDependencies": {
+                "@testing-library/jest-dom": "5.16.5"
+              }
+            </code></pre>
+
+            <p>vite.config.ts</p>
+
+            <pre><code class="language-tsx" data-trim data-line-numbers="8" data-hide-line-numbers>
+              import react from '@vitejs/plugin-react'
+              import { defineConfig } from 'vitest/config'
+
+              export default defineConfig({
+                plugins: [react()],
+                test: {
+                  environment: 'jsdom',
+                  setupFiles: ['./src/testSetup.ts'],
+                },
+              })
+            </code></pre>
+          </section>
+
+          <section>
+            <p>testSetup.ts</p>
+
+            <pre><code class="language-tsx" data-trim>
+              import { expect } from 'vitest'
+              import matchers from '@testing-library/jest-dom/matchers'
+
+              expect.extend(matchers)
+            </code></pre>
+
+            <p>*.spec.tsx</p>
+
+            <pre><code class="language-tsx" data-trim>
+              const element = screen.getByText('Hello World!')
+
+              expect(element).toHaveTextContent('Hello World!')
+              expect(element).toBeVisible()
+              expect(element).toBeEnabled()
+              expect(element).toHaveFocus()
+
+              await waitFor(() => {
+                expect(screen.getByText('Hello World!')).toBeVisible()
+              })
+            </code></pre>
+          </section>
+        </section>
+
+        <section>
+          <h1>Interaction</h1>
+
+          <p>package.json</p>
+
+          <pre><code class="language-json" data-trim>
+          "devDependencies": {
+            "@testing-library/user-event": "14.4.3"
+          }
+        </code></pre>
+
+          <p>*.spec.tsx</p>
+
+          <pre><code class="language-tsx" data-trim>
+            import userEvent from '@testing-library/user-event'
+
+            const user = userEvent.setup()
+
+            render(<button>Button</button>)
+
+            user.click(screen.getByRole('button'))
+          </code></pre>
+        </section>
+
+        <section>
+          <h1>Cheatsheet</h1>
+
+          <p>src/Cheatsheet.spec.tsx</p>
+        </section>
+
+        <section>
+          <h1>Ideas for future workshops</h1>
+
+          <ul>
+            <li>Integration tests with Playwright</li>
+            <li>Component tests with Playwright</li>
+            <li>Visual appearance tests</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>

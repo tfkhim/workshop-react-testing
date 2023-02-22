@@ -26,8 +26,8 @@ changes.
 
 # Slides
 
-The slides use [remark](https://github.com/gnab/remark) and are hosted
-at the projects [GitHub page](https://tfkhim.github.io/workshop-react-testing).
+The slides use [reveal.js](https://revealjs.com/) and are hosted at the projects
+[GitHub page](https://tfkhim.github.io/workshop-react-testing/).
 
 ## Local Development
 
@@ -36,6 +36,5 @@ You can start it with the following command
 
     npm start
 
-The slides can then be accessed at http://localhost:5173/docs/. The dev
-server will pick up any changes to the `docs/index.hml` and `docs/styling.css`
-files. If you make any changes to `docs/slides.md` you need to reload manually.
+The slides can then be accessed at http://localhost:5173/slides/. The dev server
+will pick up any changes to the `slides/index.hml` and `slides/index.js`.

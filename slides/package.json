@@ -1,0 +1,17 @@
+{
+  "name": "slides",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Thomas Himmelstoss",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "reveal.js": "4.4.0"
+  },
+  "devDependencies": {
+    "vite": "4.0.4"
+  }
+}

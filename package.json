@@ -4,6 +4,10 @@
   "description": "",
   "author": "Thomas Himmelstoss",
   "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "slides"
+  ],
   "scripts": {
     "start": "vite",
     "build": "vite build",
