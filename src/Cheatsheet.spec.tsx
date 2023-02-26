@@ -1,6 +1,21 @@
-import { FC, useEffect, useState } from 'react'
-import { render } from '@testing-library/react'
-import { describe, expect, test } from 'vitest'
+import { FC, PropsWithChildren, useEffect, useState } from 'react'
+import {
+  cleanup,
+  render,
+  waitFor,
+  waitForElementToBeRemoved,
+  within,
+} from '@testing-library/react'
+import { afterEach, describe, expect, test, vi } from 'vitest'
+import userEvent from '@testing-library/user-event'
+
+afterEach(() => {
+  // Remove any created DOM nodes to start each test case
+  // with a clean document. The call to cleanup here is
+  // actually not needed, because there is already a call
+  // to this method in testSetup.ts.
+  cleanup()
+})
 
 describe('Different query types', () => {
   // The get* family of functions returns a HTMLElement instance if it
@@ -30,29 +45,21 @@ describe('Different query types', () => {
   })
 
   // The find* family of functions works like the get* family but
-  // waits for the element to appear in the DOM. The the timeout
-  // for waiting is configurable. The same can be achieved using
-  // the waitFor method.
+  // waits for the element to appear in the DOM. The waiting
+  // timeout and polling interval are configurable. The default
+  // to 1000 ms for the timeout and 50 ms for the polling interval.
+  // The same can be achieved using the waitFor method.
   test('Find elements', async () => {
     const textContent = 'text content'
 
-    const TestComponent: FC = () => {
-      const [show, setShow] = useState(false)
-
-      useEffect(() => {
-        const id = setTimeout(() => setShow(true), 10)
-        return () => clearTimeout(id)
-      })
-
-      return show ? <h1>{textContent}</h1> : null
-    }
-
-    const { getByText, findByText } = render(<TestComponent />)
+    const { getByText, findByText } = render(
+      <ShowChildrenAfterSomeTime>{textContent}</ShowChildrenAfterSomeTime>
+    )
 
     expect(() => getByText(textContent)).toThrowError()
 
     expect(
-      await findByText(textContent, undefined, { timeout: 50 })
+      await findByText(textContent, undefined, { timeout: 60, interval: 50 })
     ).instanceOf(HTMLElement)
   })
 })
@@ -176,3 +183,133 @@ describe('Different query selectors', () => {
     expect(div).toHaveStyle({ color: 'red' })
   })
 })
+
+describe('Interaction', () => {
+  test('Click a button', async () => {
+    const onClick = vi.fn()
+    const user = userEvent.setup()
+    const { getByRole } = render(<button onClick={onClick} />)
+
+    await user.click(getByRole('button'))
+
+    expect(onClick).toHaveBeenCalledOnce()
+  })
+
+  test('Insert text', async () => {
+    const user = userEvent.setup()
+    const { getByLabelText } = render(
+      <form>
+        <input id="input" type="text" />
+        <label htmlFor="input">Input</label>
+      </form>
+    )
+
+    const input = getByLabelText('Input')
+    await user.type(input, 'Hello')
+
+    expect(input).toHaveDisplayValue('Hello')
+  })
+})
+
+describe('Advanced', () => {
+  // The waitFor method allows you to specify more powerful
+  // conditions than what the findBy* family provides. Most
+  // of the time awaiting a findBy* query and performing the
+  // assertions afterwards works, too. But it might be useful
+  // if you have to wait for some asynchronous action that
+  // doesn't change the DOM, e.g. a mutation call to some
+  // backend API.
+  test('Wait for some assertion to become true', async () => {
+    const DelayedCallbackInvocation: FC<{ callback: () => void }> = ({
+      callback,
+    }) => {
+      useEffect(() => {
+        const id = setTimeout(callback, 10)
+        return () => clearTimeout(id)
+      }, [callback])
+      return null
+    }
+
+    const callback = vi.fn()
+
+    render(<DelayedCallbackInvocation callback={callback} />)
+
+    await waitFor(() => {
+      expect(callback).toHaveBeenCalledOnce()
+    })
+  })
+
+  // Wait for an element to disappear. The callback must return an
+  // element, list of elements or null. It may also throw an
+  // exception if the element is not present. So you can use the
+  // getBy*, queryBy*, getAllBy* and queryAllByÜ function families.
+  // The waitForElementToBeRemoved method will throw an error if the
+  // element is already removed during the initial execution of the
+  // callback.
+  test('Wait for some element to disappear', async () => {
+    const textContent = 'Hello World!'
+    const { queryByText } = render(
+      <HideChildrenAfterSomeTime>{textContent}</HideChildrenAfterSomeTime>
+    )
+
+    expect(queryByText(textContent)).toBeInTheDocument()
+
+    await waitForElementToBeRemoved(() => queryByText(textContent))
+
+    expect(queryByText(textContent)).not.toBeInTheDocument()
+  })
+
+  // The within function allows you to get a new set of getBy*,
+  // queryBy*, ... functions that are bound to some sub element.
+  test('Query within a sub element', () => {
+    const { getByText } = render(
+      <div>
+        <div>
+          First <button>Button 1</button>
+        </div>
+        <div>
+          Second <button>Button 2</button>
+        </div>
+      </div>
+    )
+
+    const firstDiv = getByText(/First/)
+
+    const firstButton = within(firstDiv).getByRole('button')
+
+    expect(firstButton).toHaveTextContent('Button 1')
+  })
+})
+
+// ---------------------------------------------------------
+// Test component to demonstrate async methods
+// ---------------------------------------------------------
+
+const ShowChildrenAfterSomeTime: FC<PropsWithChildren> = ({ children }) => {
+  return (
+    <ShowOrHideAfterSomeTime initiallyShown={false}>
+      {children}
+    </ShowOrHideAfterSomeTime>
+  )
+}
+
+const HideChildrenAfterSomeTime: FC<PropsWithChildren> = ({ children }) => {
+  return (
+    <ShowOrHideAfterSomeTime initiallyShown={true}>
+      {children}
+    </ShowOrHideAfterSomeTime>
+  )
+}
+
+const ShowOrHideAfterSomeTime: FC<
+  PropsWithChildren<{ initiallyShown: boolean }>
+> = ({ children, initiallyShown }) => {
+  const [show, setShow] = useState(initiallyShown)
+
+  useEffect(() => {
+    const id = setTimeout(() => setShow((show) => !show), 10)
+    return () => clearTimeout(id)
+  }, [])
+
+  return show ? <>{children}</> : null
+}
