@@ -1,4 +1,4 @@
-import { RenderResult, cleanup, render } from '@testing-library/react'
+import { RenderResult, cleanup, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import { ShowMoreButton } from './ShowMoreButton'
@@ -9,31 +9,31 @@ describe('ShowMoreButton', () => {
   const childText = 'child-1'
 
   it('should initially show a button', () => {
-    const result = givenRenderedComponent()
+    givenRenderedComponent()
 
-    expect(result.getByRole('button')).toHaveTextContent('Show')
+    expect(screen.getByRole('button')).toHaveTextContent('Show')
   })
 
   it('should initially not show the child component', () => {
-    const result = givenRenderedComponent()
+    givenRenderedComponent()
 
-    expect(result.queryByText(childText)).not.toBeInTheDocument()
+    expect(screen.queryByText(childText)).not.toBeInTheDocument()
   })
 
   it('should show the children after clicking the button', async () => {
-    const result = givenRenderedComponent()
+    givenRenderedComponent()
 
-    await whenButtonClicked(result)
+    await whenButtonClicked()
 
-    expect(result.queryByText(childText)).toBeVisible()
+    expect(screen.queryByText(childText)).toBeVisible()
   })
 
   it('should not longer show the button after clicking it', async () => {
-    const result = givenRenderedComponent()
+    givenRenderedComponent()
 
-    await whenButtonClicked(result)
+    await whenButtonClicked()
 
-    expect(result.queryByRole('button')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
   })
 
   const givenRenderedComponent = (): RenderResult =>
@@ -43,11 +43,8 @@ describe('ShowMoreButton', () => {
       </ShowMoreButton>
     )
 
-  const whenButtonClicked = async (result: RenderResult) => {
+  const whenButtonClicked = async () => {
     const user = userEvent.setup()
-
-    await user.click(result.getByRole('button'))
-
-    return result
+    await user.click(screen.getByRole('button'))
   }
 })

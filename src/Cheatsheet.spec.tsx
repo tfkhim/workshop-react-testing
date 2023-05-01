@@ -248,11 +248,11 @@ describe('Advanced', () => {
   // callback.
   test('Wait for some element to disappear', async () => {
     const textContent = 'Hello World!'
-    const { queryByText } = render(
+    const { getByText, queryByText } = render(
       <HideChildrenAfterSomeTime>{textContent}</HideChildrenAfterSomeTime>
     )
 
-    expect(queryByText(textContent)).toBeInTheDocument()
+    expect(getByText(textContent)).toBeInTheDocument()
 
     await waitForElementToBeRemoved(() => queryByText(textContent))
 

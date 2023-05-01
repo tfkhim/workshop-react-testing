@@ -1,4 +1,4 @@
-import { RenderResult, cleanup, render } from '@testing-library/react'
+import { RenderResult, cleanup, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import { LoadEntries } from './LoadEntries'
@@ -12,42 +12,42 @@ describe('LoadEntries', () => {
   const childText = 'child-1'
 
   it('should initially show a button', () => {
-    const result = givenRenderedComponent()
+    givenRenderedComponent()
 
-    expect(result.getByRole('button')).toHaveTextContent('Load')
+    expect(screen.getByRole('button')).toHaveTextContent('Load')
   })
 
   it('should initially not show any entry component', () => {
-    const result = givenRenderedComponent()
+    const { container } = givenRenderedComponent()
 
-    expect(result.container).toHaveTextContent(/^Load$/)
+    expect(container).toHaveTextContent(/^Load$/)
   })
 
   it('should show the entries after clicking the button', async () => {
-    const result = givenRenderedComponent()
+    givenRenderedComponent()
     givenLoadingSucceeds()
 
-    await whenButtonClicked(result)
+    await whenButtonClicked()
 
-    expect(result.queryByText(childText)).toBeVisible()
+    expect(screen.queryByText(childText)).toBeVisible()
   })
 
   it('should no longer show the button after clicking it', async () => {
-    const result = givenRenderedComponent()
+    givenRenderedComponent()
     givenLoadingSucceeds()
 
-    await whenButtonClicked(result)
+    await whenButtonClicked()
 
-    expect(result.queryByRole('button')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
   })
 
   it('should show an error message if loading failed', async () => {
-    const result = givenRenderedComponent()
+    givenRenderedComponent()
     givenLoadingFails()
 
-    await whenButtonClicked(result)
+    await whenButtonClicked()
 
-    expect(result.queryByText('Could not load entries.')).toBeVisible()
+    expect(screen.queryByText('Could not load entries.')).toBeVisible()
   })
 
   const givenRenderedComponent = (): RenderResult => render(<LoadEntries />)
@@ -67,11 +67,8 @@ describe('LoadEntries', () => {
     fetchSpy.mockRejectedValueOnce(new Error('MOCK'))
   }
 
-  const whenButtonClicked = async (result: RenderResult) => {
+  const whenButtonClicked = async () => {
     const user = userEvent.setup()
-
-    await user.click(result.getByRole('button'))
-
-    return result
+    await user.click(screen.getByRole('button'))
   }
 })
