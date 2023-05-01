@@ -180,7 +180,24 @@
         </section>
 
         <section>
-          <h1>React Testing Library</h1>
+          <h1>(React) Testing Library</h1>
+
+          <cite
+            >"The more your tests resemble the way your software is used, the
+            more confidence they can give you."</cite
+          >
+
+          <footer>
+            https://testing-library.com/docs/dom-testing-library/intro
+          </footer>
+
+          <aside class="notes" data-markdown>
+            <textarea data-template>
+              Why the parentheses?
+              - The core Testing Library only knows about DOM and not React
+              - There are multiple wrappers for different frameworks like React, Vue or Angular
+            </textarea>
+          </aside>
         </section>
 
         <section>
@@ -318,6 +335,123 @@
           <h1>Cheatsheet</h1>
 
           <p>src/Cheatsheet.spec.tsx</p>
+        </section>
+
+        <section>
+          <h1>Exercise</h1>
+
+          <p>src/exercises/01-testing-components</p>
+        </section>
+
+        <section>
+          <h1>Tips & Tricks</h1>
+        </section>
+
+        <section>
+          <section><h1>Treat your test code like productive code</h1></section>
+
+          <section>
+            <h1>ESLint rules</h1>
+          </section>
+
+          <section>
+            <h1>Avoid copying the same selectors</h1>
+            <p>TODO: Describe Page model</p>
+          </section>
+        </section>
+
+        <section>
+          <h1>React Strict Mode for tests</h1>
+        </section>
+
+        <section><h1>Testable design</h1></section>
+
+        <section>
+          <section>
+            <h1>Cut the component tree</h1>
+            <p>Smaller component trees can be tested more thoroughly</p>
+          </section>
+
+          <section>
+            <h1>Pass elements as properties</h1>
+            <p>(Dependency Injections)</p>
+          </section>
+
+          <section><h1>Most prominent example: children property</h1></section>
+
+          <section><h1>Other properties are also possible</h1></section>
+
+          <section>
+            <h1>
+              Separation into a dumb layout component and business components
+            </h1>
+          </section>
+
+          <section>
+            <h1>
+              Problem: The child component needs some information from the
+              intermediate component
+            </h1>
+            <p>Solution: Render properties</p>
+            <p>(Factory Pattern)</p>
+          </section>
+
+          <section>
+            <h1>Pass a component function</h1>
+            <p>If the intermediate component provides all properties</p>
+          </section>
+
+          <section>
+            <h1>Pass a function</h1>
+            <p>If the intermediate component provides only some properties</p>
+          </section>
+
+          <section>
+            <h1>Bonus</h1>
+            <p>
+              The children property also accepts functions (or anything else)
+            </p>
+          </section>
+
+          <section>
+            <h1>Pros & Cons</h1>
+            <p>Components can be tested in isolation</p>
+            <p>Simplifies the "Move state up" pattern</p>
+            <p>Also avoids prop drilling</p>
+            <p>
+              Introducing another level of indirection makes predicting the
+              runtime behavior harder
+            </p>
+          </section>
+        </section>
+
+        <section>
+          <section><h1>View, View Model, (Model)</h1></section>
+
+          <section>
+            <h1>Separate components into a dumb view and a view model</h1>
+          </section>
+
+          <section>
+            <h1>View: Pure functional</h1>
+            <p>Only create JSX based on the properties</p>
+          </section>
+
+          <section>
+            <h1>View Model: Hold and prepare data for the view</h1>
+          </section>
+
+          <section><h1>Testing hooks</h1></section>
+
+          <section>
+            <h1>Pros & Cons</h1>
+            <p>Separation of concerns: Less test cases need to change</p>
+            <p>Testing complex logic can be simpler by testing a custom hook</p>
+            <p>
+              Introduction of an unnecessary context switch for simple
+              components
+            </p>
+          </section>
         </section>
 
         <section>
