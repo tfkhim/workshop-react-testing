@@ -369,8 +369,13 @@
           </section>
 
           <section>
-            <h1>Avoid copying the same selectors</h1>
-            <p>TODO: Describe Page model</p>
+            <h1>Avoid repeating selection and interaction code</h1>
+            <p>src/showcases/PageModel.spec.tsx</p>
+            <ul>
+              <li>Hide knowledge about the HTML structure behind an API</li>
+              <li>Changing the HTML structure becomes easier</li>
+              <li>Tests become easier to read</li>
+            </ul>
           </section>
         </section>
 
@@ -378,7 +383,7 @@
           <h1>React Strict Mode</h1>
           <p>src/showcases/StrictMode.spec.tsx</p>
           <ul>
-            <li>Runs the some parts that should be pure twice</li>
+            <li>Runs some parts that should be pure twice</li>
             <li>You still need some way to spot revealed errors</li>
             <li>Test cases can be one way to spot those errors</li>
           </ul>
