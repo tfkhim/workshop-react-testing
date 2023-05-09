@@ -393,42 +393,84 @@
 
         <section>
           <section>
-            <h1>Cut the component tree</h1>
-            <p>Smaller component trees can be tested more thoroughly</p>
+            <h1>Decoupling Components</h1>
+            <ul>
+              <li>
+                Deep component trees contain many different functionalities
+              </li>
+              <li>Decoupling those allows testing each one more thoroughly</li>
+              <li>Separate construction and usage</li>
+              <li>Pass elements as properties (Dependency Injection)</li>
+            </ul>
           </section>
 
           <section>
-            <h1>Pass elements as properties</h1>
-            <p>(Dependency Injections)</p>
-          </section>
+            <h1>children property</h1>
 
-          <section><h1>Most prominent example: children property</h1></section>
+            <pre><code class="language-tsx" data-trim><script type="text/template">
+              const Intermediate: FC<PropsWithChildren> = ({children}) => {
+                return <div>{children}</div>
+              }
 
-          <section><h1>Other properties are also possible</h1></section>
-
-          <section>
-            <h1>
-              Separation into a dumb layout component and business components
-            </h1>
-          </section>
-
-          <section>
-            <h1>
-              Problem: The child component needs some information from the
-              intermediate component
-            </h1>
-            <p>Solution: Render properties</p>
-            <p>(Factory Pattern)</p>
+              const Parent: FC = () => {
+                return (
+                  <Intermediate>
+                    <p>first</p>
+                    <p>second</p>
+                  </Intermediate>
+                )
+              }
+            </script></code></pre>
           </section>
 
           <section>
-            <h1>Pass a component function</h1>
-            <p>If the intermediate component provides all properties</p>
+            <h1>Other properties</h1>
+
+            <pre><code class="language-tsx" data-trim><script type="text/template">
+              type IntermediateProps = {
+                anyProp: ReactNode
+              }
+
+              const Intermediate: FC<IntermediateProps> = ({anyProp}) => {
+                return <div>{anyProp}</div>
+              }
+
+              const Parent: FC = () => {
+                return (
+                  <Intermediate anyProp={<p>Some JSX</p>} />
+                )
+              }
+            </script></code></pre>
           </section>
 
           <section>
-            <h1>Pass a function</h1>
-            <p>If the intermediate component provides only some properties</p>
+            <h1>Problem</h1>
+            <h3>
+              The child component needs some information from the intermediate
+              component
+            </h3>
+          </section>
+
+          <section>
+            <h1>Solution</h1>
+            <p>Render properties (Factory Pattern)</p>
+
+            <pre><code class="language-tsx" data-trim><script type="text/template">
+              type IntermediateProps = {
+                render: (state: string) => ReactNode
+              }
+
+              const Intermediate: FC<IntermediateProps> = ({render}) => {
+                const [name] = useState('World')
+                return <div>{render(name)}</div>
+              }
+
+              const Parent: FC = () => {
+                return (
+                  <Intermediate render={(name) => <p>Hello {name}</p>} />
+                )
+              }
+            </script></code></pre>
           </section>
 
           <section>
@@ -436,17 +478,43 @@
             <p>
               The children property also accepts functions (or anything else)
             </p>
+
+            <pre><code class="language-tsx" data-trim><script type="text/template">
+              type IntermediateProps = {
+                children: ((state: string) => ReactNode)[]
+              }
+
+              const Intermediate: FC<IntermediateProps> = ({children}) => {
+                const [name] = useState('World')
+                return <div>{children.map((render) => render(name)}</div>
+              }
+            </script></code></pre>
+          </section>
+
+          <section>
+            <pre><code class="language-tsx" data-trim><script type="text/template">
+              const Parent: FC = () => {
+                return (
+                  <Intermediate>
+                    {(name) => <h1>{name}</h1>}
+                    {(name) => <h2>{name}</h2>}
+                  </Intermediate>
+                )
+              }
+            </script></code></pre>
           </section>
 
           <section>
             <h1>Pros & Cons</h1>
-            <p>Components can be tested in isolation</p>
-            <p>Simplifies the "Move state up" pattern</p>
-            <p>Also avoids prop drilling</p>
-            <p>
-              Introducing another level of indirection makes predicting the
-              runtime behavior harder
-            </p>
+            <ul>
+              <li>Components can be tested in isolation</li>
+              <li>Simplifies the "Move state up" pattern</li>
+              <li>Also avoids prop drilling</li>
+              <li>
+                Introducing another level of indirection makes predicting the
+                runtime behavior harder
+              </li>
+            </ul>
           </section>
         </section>
 
