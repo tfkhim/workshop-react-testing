@@ -65,7 +65,7 @@ describe('Plain tests', () => {
   })
 })
 
-class CounterModel {
+class CounterPageModel {
   private readonly user: ReturnType<typeof userEvent.setup>
   private readonly view: RenderResult
 
@@ -74,8 +74,8 @@ class CounterModel {
     this.view = render(<Counter />)
   }
 
-  public static create(): CounterModel {
-    return new CounterModel()
+  public static create(): CounterPageModel {
+    return new CounterPageModel()
   }
 
   public getCount(): HTMLElement {
@@ -95,13 +95,13 @@ class CounterModel {
 
 describe('With Page Model', () => {
   it('should have an initial count of zero', () => {
-    const counter = CounterModel.create()
+    const counter = CounterPageModel.create()
 
     expect(counter.getCount()).toHaveTextContent('0')
   })
 
   it('should allow incrementing the counter', async () => {
-    const counter = CounterModel.create()
+    const counter = CounterPageModel.create()
 
     await counter.incrementCounter()
 
@@ -109,7 +109,7 @@ describe('With Page Model', () => {
   })
 
   it('should not allow decrementing below zero', async () => {
-    const counter = CounterModel.create()
+    const counter = CounterPageModel.create()
 
     await counter.decrementCounter()
 
@@ -117,7 +117,7 @@ describe('With Page Model', () => {
   })
 
   it('should allow decrementing a positive value', async () => {
-    const counter = CounterModel.create()
+    const counter = CounterPageModel.create()
     await counter.incrementCounter()
 
     await counter.decrementCounter()

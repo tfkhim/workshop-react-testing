@@ -519,31 +519,84 @@
         </section>
 
         <section>
-          <section><h1>View, View Model, (Model)</h1></section>
-
           <section>
-            <h1>Separate components into a dumb view and a view model</h1>
+            <h1>View, View Model, (Model)</h1>
+            <ul>
+              <li>
+                Separate components into dumb view, a view model and potentially
+                a domain model
+              </li>
+              <li>View: Take display data and render it</li>
+
+              <li>Model: Domain logic that is independent of React</li>
+            </ul>
           </section>
 
           <section>
-            <h1>View: Pure functional</h1>
-            <p>Only create JSX based on the properties</p>
+            <h1>View</h1>
+            <ul>
+              <li>Take display data and render it</li>
+              <li>Pure functional</li>
+              <li>Only map input properties to components</li>
+              <li>No further transformation</li>
+            </ul>
           </section>
 
           <section>
-            <h1>View Model: Hold and prepare data for the view</h1>
+            <h1>View Model</h1>
+            <ul>
+              <li>Glue between React and Domain</li>
+              <li>Prepare domain data for the view</li>
+              <li>No domain logic. Just mapping logic</li>
+              <li>Implemented as a custom hook</li>
+            </ul>
           </section>
 
-          <section><h1>Testing hooks</h1></section>
+          <section>
+            <h1>Model</h1>
+            <ul>
+              <li>Domain logic that is independent of React</li>
+              <li>No dependency to React</li>
+            </ul>
+          </section>
+
+          <section>
+            <h1>Testing hooks</h1>
+
+            <pre><code class="language-tsx" data-trim><script type="text/template">
+              // Import this from @testing-library/react
+              // or you might get warnings
+              import { act, renderHook } from '@testing-library/react'
+
+              const { result } = renderHook(() => {
+                return useState(0)
+              })
+
+              expect(result.current[0]).toStrictEqual(0)
+
+              act(() => result.current[1](1))
+
+              expect(result.current[0]).toStrictEqual(1)
+            </script></code></pre>
+          </section>
 
           <section>
             <h1>Pros & Cons</h1>
-            <p>Separation of concerns: Less test cases need to change</p>
-            <p>Testing complex logic can be simpler by testing a custom hook</p>
-            <p>
-              Introduction of an unnecessary context switch for simple
-              components
-            </p>
+            <ul>
+              <li>Separation of concerns: Less test cases need to change</li>
+              <li>
+                Reduces the amount of tests that need to interface with the DOM
+              </li>
+              <li>
+                Testing complex display logic can be simpler by testing a custom
+                hook
+              </li>
+              <li>Simplifies switching to a different framework</li>
+              <li>
+                Introduction of unnecessary context switches for simple
+                components
+              </li>
+            </ul>
           </section>
         </section>
 
