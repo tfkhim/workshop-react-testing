@@ -184,6 +184,109 @@ describe('Different query selectors', () => {
   })
 })
 
+describe('Assertions', () => {
+  test('Element has specific text content', () => {
+    const textContent = 'text content'
+
+    const { getByRole } = render(<button>{textContent}</button>)
+
+    expect(getByRole('button')).toHaveTextContent(textContent)
+  })
+
+  test('Element is visible', () => {
+    const textContent = 'text content'
+
+    const { queryByText } = render(<span>{textContent}</span>)
+
+    expect(queryByText(textContent)).toBeVisible()
+  })
+
+  test('Element is in the document', () => {
+    const textContent = 'text content'
+
+    const { queryByText } = render(<span hidden>{textContent}</span>)
+
+    const element = queryByText(textContent)
+    expect(element).not.toBeVisible()
+    expect(element).toBeInTheDocument()
+  })
+
+  test('Element is enabled', () => {
+    const { getByRole } = render(<button>Button</button>)
+
+    expect(getByRole('button')).toBeEnabled()
+  })
+
+  test('Element is disabled', () => {
+    const { getByRole } = render(<button disabled>Button</button>)
+
+    expect(getByRole('button')).toBeDisabled()
+  })
+
+  test('Input is valid', async () => {
+    const { getByLabelText } = render(
+      <>
+        <label htmlFor="email">Email</label>
+        <input id="email" type="email" />
+      </>
+    )
+
+    const user = userEvent.setup()
+    const input = getByLabelText('Email')
+    await user.type(input, 'my.name@example.com')
+
+    expect(input).toBeValid()
+  })
+
+  test('Input is invalid', async () => {
+    const { getByLabelText } = render(
+      <>
+        <label htmlFor="email">Email</label>
+        <input id="email" type="email" />
+      </>
+    )
+
+    const user = userEvent.setup()
+    const input = getByLabelText('Email')
+    await user.type(input, 'not an email')
+
+    expect(input).toBeInvalid()
+  })
+
+  test('Input is required', async () => {
+    const { getByLabelText } = render(
+      <>
+        <label htmlFor="text">Text</label>
+        <input id="text" required />
+      </>
+    )
+
+    expect(getByLabelText('Text')).toBeRequired()
+  })
+
+  test('Input has specific value', async () => {
+    const { getByLabelText } = render(
+      <>
+        <label htmlFor="text">Text</label>
+        <input id="text" value="Form Text" onChange={noop} />
+      </>
+    )
+
+    expect(getByLabelText('Text')).toHaveValue('Form Text')
+  })
+
+  test('Input is checked', async () => {
+    const { getByLabelText } = render(
+      <>
+        <label htmlFor="checkbox">Checkbox</label>
+        <input id="checkbox" type="checkbox" onChange={noop} checked />
+      </>
+    )
+
+    expect(getByLabelText('Checkbox')).toBeChecked()
+  })
+})
+
 describe('Interaction', () => {
   test('Click a button', async () => {
     const onClick = vi.fn()
@@ -312,4 +415,8 @@ const ShowOrHideAfterSomeTime: FC<
   }, [])
 
   return show ? <>{children}</> : null
+}
+
+function noop() {
+  return
 }
