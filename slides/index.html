@@ -522,11 +522,20 @@
 
         <section>
           <section>
-            <h1>View, View Model, (Model)</h1>
+            <h1>Model View ViewModel (MVVM)</h1>
             <p>
               Split a component into a dumb view, a view model and potentially a
               domain model
             </p>
+          </section>
+
+          <section>
+            <h1>Model</h1>
+            <ul>
+              <li>Domain logic</li>
+              <li>No dependency to React</li>
+              <li>Easy to test</li>
+            </ul>
           </section>
 
           <section>
@@ -550,15 +559,6 @@
           </section>
 
           <section>
-            <h1>Model</h1>
-            <ul>
-              <li>Domain logic</li>
-              <li>No dependency to React</li>
-              <li>Easy to test</li>
-            </ul>
-          </section>
-
-          <section>
             <h1>Testing hooks</h1>
 
             <pre><code class="language-tsx" data-trim><script type="text/template">
@@ -577,6 +577,11 @@
 
               expect(result.current.state).toStrictEqual(1)
             </script></code></pre>
+          </section>
+
+          <section>
+            <h1>Example</h1>
+            <p>src/showcases/ModelViewViewModel.spec.tsx</p>
           </section>
 
           <section>
