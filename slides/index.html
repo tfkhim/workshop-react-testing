@@ -369,10 +369,12 @@
           </section>
 
           <section>
-            <h1>Avoid repeating selection and interaction code</h1>
+            <h1>Page Model</h1>
             <p>src/showcases/PageModel.spec.tsx</p>
             <ul>
-              <li>Hide knowledge about the HTML structure behind an API</li>
+              <li>Hide selection and interaction behind an API</li>
+              <li>Avoids repetition</li>
+              <li>Reduces knowledge about implementation details</li>
               <li>Changing the HTML structure becomes easier</li>
               <li>Tests become easier to read</li>
             </ul>
@@ -445,10 +447,10 @@
 
           <section>
             <h1>Problem</h1>
-            <h3>
+            <p>
               The child component needs some information from the intermediate
               component
-            </h3>
+            </p>
           </section>
 
           <section>
@@ -521,15 +523,10 @@
         <section>
           <section>
             <h1>View, View Model, (Model)</h1>
-            <ul>
-              <li>
-                Separate components into dumb view, a view model and potentially
-                a domain model
-              </li>
-              <li>View: Take display data and render it</li>
-
-              <li>Model: Domain logic that is independent of React</li>
-            </ul>
+            <p>
+              Split a component into a dumb view, a view model and potentially a
+              domain model
+            </p>
           </section>
 
           <section>
@@ -555,8 +552,9 @@
           <section>
             <h1>Model</h1>
             <ul>
-              <li>Domain logic that is independent of React</li>
+              <li>Domain logic</li>
               <li>No dependency to React</li>
+              <li>Easy to test</li>
             </ul>
           </section>
 
@@ -569,14 +567,15 @@
               import { act, renderHook } from '@testing-library/react'
 
               const { result } = renderHook(() => {
-                return useState(0)
+                const [state, setState] = useState(0)
+                return { state, setState }
               })
 
-              expect(result.current[0]).toStrictEqual(0)
+              expect(result.current.state).toStrictEqual(0)
 
-              act(() => result.current[1](1))
+              act(() => result.current.setState(1))
 
-              expect(result.current[0]).toStrictEqual(1)
+              expect(result.current.state).toStrictEqual(1)
             </script></code></pre>
           </section>
 
