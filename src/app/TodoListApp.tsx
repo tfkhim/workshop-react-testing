@@ -22,6 +22,13 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
+export type Task = {
+  id: string
+  done: boolean
+  description: string
+  dueDate: Date | null
+}
+
 const initialTasks = [
   {
     id: crypto.randomUUID(),
@@ -59,7 +66,7 @@ export const TodoListApp: FC = () => {
     [colorScheme]
   )
 
-  const [tasks, setTasks] = useState(initialTasks)
+  const [tasks, setTasks] = useState<Task[]>(initialTasks)
   const [showAllEntries, setShowAllEntries] = useState(false)
 
   const toggleVisibility = useCallback(
@@ -84,6 +91,18 @@ export const TodoListApp: FC = () => {
     return showAllEntries ? tasks : tasks.filter((task) => !task.done)
   }, [tasks, showAllEntries])
 
+  const taskListProps = useMemo(
+    () =>
+      filteredTasks.map((task) => {
+        return {
+          ...task,
+          onToggleDone: () =>
+            setTasks((tasks) => toggleDoneForId(tasks, task.id)),
+        }
+      }),
+    [filteredTasks, setTasks]
+  )
+
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -96,10 +115,23 @@ export const TodoListApp: FC = () => {
           <NewTaskButton onClick={showDialog} />
         </AppBar>
         <Container>
-          <TaskList tasks={filteredTasks} />
+          <TaskList tasks={taskListProps} />
         </Container>
         <AddTaskDialog {...dialogProps} />
       </LocalizationProvider>
     </ThemeProvider>
   )
+}
+
+function toggleDoneForId(tasks: Task[], id: string): Task[] {
+  return tasks.map((task) => {
+    if (task.id === id) {
+      return {
+        ...task,
+        done: !task.done,
+      }
+    } else {
+      return task
+    }
+  })
 }
