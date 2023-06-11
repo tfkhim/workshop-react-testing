@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useCallback, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -8,16 +8,52 @@ import Button from '@mui/material/Button'
 import InputLabel from '@mui/material/InputLabel'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker/DatePicker'
 
-type AddTaskDialogProps = {
+export type NewTaskData = {
+  dueDate: Date | null
+  description: string
+}
+
+export type UseAddTaskDialogProps = {
+  onAddNewTask: (taskData: NewTaskData) => void
+}
+
+export function useAddTaskDialog({ onAddNewTask }: UseAddTaskDialogProps): {
+  dialogProps: AddTaskDialogProps
+  showDialog: () => void
+} {
+  const [open, setOpen] = useState(false)
+
+  const onAdd = useCallback(
+    (taskData: NewTaskData) => {
+      onAddNewTask(taskData)
+      setOpen(false)
+    },
+    [onAddNewTask, setOpen]
+  )
+
+  const onClose = useCallback(() => setOpen(false), [setOpen])
+
+  const showDialog = useCallback(() => setOpen(true), [setOpen])
+  return {
+    dialogProps: {
+      open,
+      onAdd,
+      onClose,
+    },
+    showDialog,
+  }
+}
+
+export type AddTaskDialogProps = {
   open: boolean
   onClose: () => void
-  onAddNew: (_: { dueDate: Date | null; description: string }) => void
+  onAdd: (_: { dueDate: Date | null; description: string }) => void
 }
 
 export const AddTaskDialog: FC<AddTaskDialogProps> = ({
   open,
   onClose,
-  onAddNew,
+  onAdd,
 }) => {
   const [dueDate, setDueDate] = useState<Date | null>(null)
   const [description, setDescription] = useState('')
@@ -32,7 +68,6 @@ export const AddTaskDialog: FC<AddTaskDialogProps> = ({
           fullWidth
           value={description}
           onChange={(event) => setDescription(event.target.value)}
-          autoFocus
         />
         <InputLabel htmlFor="due-date">Due Date</InputLabel>
         <DatePicker
@@ -44,7 +79,7 @@ export const AddTaskDialog: FC<AddTaskDialogProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={() => onAddNew({ dueDate, description })}>Add</Button>
+        <Button onClick={() => onAdd({ dueDate, description })}>Add</Button>
       </DialogActions>
     </Dialog>
   )

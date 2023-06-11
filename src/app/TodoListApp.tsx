@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react'
+import { FC, useCallback, useMemo, useState } from 'react'
 
 import ThemeProvider from '@mui/material/styles/ThemeProvider'
 import createTheme from '@mui/material/styles/createTheme'
@@ -9,7 +9,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { AppBar } from './AppBar/AppBar'
 import { TaskList } from './TaskList/TaskList'
-import { AddTaskDialog } from './AddTaskDialog'
+import {
+  AddTaskDialog,
+  NewTaskData,
+  useAddTaskDialog,
+} from './AddTask/AddTaskDialog'
+import { VisibilityToggleButton } from './AppBar/VisibilityToggleButton'
+import { NewTaskButton } from './AddTask/NewTaskButton'
 
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
@@ -17,15 +23,20 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
 const initialTasks = [
-  { key: 1, done: true, description: 'first task', dueDate: new Date() },
   {
-    key: 2,
+    id: crypto.randomUUID(),
+    done: true,
+    description: 'first task',
+    dueDate: new Date(),
+  },
+  {
+    id: crypto.randomUUID(),
     done: false,
     description: 'second task',
     dueDate: null,
   },
   {
-    key: 3,
+    id: crypto.randomUUID(),
     done: false,
     description: 'third task',
     dueDate: new Date(2022, 7, 3),
@@ -49,27 +60,45 @@ export const TodoListApp: FC = () => {
   )
 
   const [tasks, setTasks] = useState(initialTasks)
-  const [showDialog, setShowDialog] = useState(true)
+  const [showAllEntries, setShowAllEntries] = useState(false)
+
+  const toggleVisibility = useCallback(
+    () => setShowAllEntries((oldState) => !oldState),
+    [setShowAllEntries]
+  )
+
+  const addTask = useCallback(
+    (task: NewTaskData) =>
+      setTasks((oldTasks) => [
+        ...oldTasks,
+        { id: crypto.randomUUID(), done: false, ...task },
+      ]),
+    [setTasks]
+  )
+
+  const { dialogProps, showDialog } = useAddTaskDialog({
+    onAddNewTask: addTask,
+  })
+
+  const filteredTasks = useMemo(() => {
+    return showAllEntries ? tasks : tasks.filter((task) => !task.done)
+  }, [tasks, showAllEntries])
 
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <CssBaseline enableColorScheme />
-        <AppBar />
+        <AppBar>
+          <VisibilityToggleButton
+            visible={showAllEntries}
+            onToggle={toggleVisibility}
+          />
+          <NewTaskButton onClick={showDialog} />
+        </AppBar>
         <Container>
-          <TaskList tasks={tasks} />
+          <TaskList tasks={filteredTasks} />
         </Container>
-        <AddTaskDialog
-          open={showDialog}
-          onClose={() => setShowDialog(false)}
-          onAddNew={(task) => {
-            setTasks((oldTasks) => [
-              ...oldTasks,
-              { key: oldTasks.length, done: false, ...task },
-            ])
-            setShowDialog(false)
-          }}
-        />
+        <AddTaskDialog {...dialogProps} />
       </LocalizationProvider>
     </ThemeProvider>
   )

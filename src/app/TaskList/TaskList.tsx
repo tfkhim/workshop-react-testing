@@ -7,34 +7,32 @@ import ListItemButton from '@mui/material/ListItemButton'
 import Checkbox from '@mui/material/Checkbox'
 
 type TaskListProps = {
-  tasks: TaskListEntryProps[]
+  tasks: ({ id: string } & TaskListEntryProps)[]
 }
 
 export const TaskList: FC<TaskListProps> = ({ tasks }) => {
   return (
     <List>
-      {tasks.map(({ key, ...other }) => (
-        <TaskListEntry key={key} {...other} />
+      {tasks.map(({ id, ...entryProps }) => (
+        <TaskListEntry key={id} {...entryProps} />
       ))}
     </List>
   )
 }
 
 type TaskListEntryProps = {
-  key: number
   done: boolean
   dueDate: Date | null
   description: string
 }
 
 const TaskListEntry: FC<TaskListEntryProps> = ({
-  key,
   done,
   description,
   dueDate,
 }) => {
   return (
-    <ListItem key={key} divider>
+    <ListItem divider>
       <ListItemIcon aria-label="done">
         <Checkbox checked={done} />
       </ListItemIcon>

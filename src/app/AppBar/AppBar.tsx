@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, PropsWithChildren } from 'react'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import MuiAppBar from '@mui/material/AppBar'
@@ -6,18 +6,15 @@ import Toolbar from '@mui/material/Toolbar'
 
 import LogoIcon from '@mui/icons-material/TaskAltOutlined'
 import styled from '@mui/material/styles/styled'
-import { VisibilityToggleButton } from './VisibilityToggleButton'
-import { NewTaskButton } from './NewTaskButton'
 
-export const AppBar: FC = () => {
+export const AppBar: FC<PropsWithChildren> = ({ children }) => {
   return (
     <MuiAppBar position="sticky">
       <Container>
         <Toolbar disableGutters>
           <Logo />
           <ApplicationName />
-          <StyledVisibilityToggleButton />
-          <StyledNewTaskButton />
+          <ActionsContainer>{children}</ActionsContainer>
         </Toolbar>
       </Container>
     </MuiAppBar>
@@ -38,14 +35,10 @@ const ApplicationName: FC = () => {
   )
 }
 
-const StyledVisibilityToggleButton = styled(VisibilityToggleButton)(
+const ActionsContainer = styled('span')(
   ({ theme }) => `
+display: inline-flex;
 margin: ${theme.spacing(1)} 0;
-`
-)
-
-const StyledNewTaskButton = styled(NewTaskButton)(
-  ({ theme }) => `
-margin: ${theme.spacing(1)} 0;
+column-gap: ${theme.spacing(1)};
 `
 )

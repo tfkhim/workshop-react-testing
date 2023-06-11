@@ -1,17 +1,20 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import IconButton from '@mui/material/IconButton'
-import type { CommonProps } from '@mui/material/OverridableComponent'
 
 import VisibileIcon from '@mui/icons-material/VisibilityOutlined'
 import InvisibleIcon from '@mui/icons-material/VisibilityOffOutlined'
 
-export const VisibilityToggleButton: FC<CommonProps> = (commonProps) => {
-  const [visible, setVisible] = useState(false)
+export type VisibilityToggleButtonProps = {
+  visible: boolean
+  onToggle: () => void
+}
 
-  const toggle = () => setVisible((oldState) => !oldState)
-
+export const VisibilityToggleButton: FC<VisibilityToggleButtonProps> = ({
+  visible,
+  onToggle,
+}) => {
   return (
-    <IconButton {...commonProps} onClick={toggle}>
+    <IconButton onClick={onToggle} color="inherit">
       {visible ? <VisibileIcon /> : <InvisibleIcon />}
     </IconButton>
   )
