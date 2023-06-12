@@ -7,15 +7,11 @@ import CssBaseline from '@mui/material/CssBaseline'
 import Container from '@mui/material/Container'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { AppBar } from './AppBar/AppBar'
-import { TaskList } from './TaskList/TaskList'
-import {
-  AddTaskDialog,
-  NewTaskData,
-  useAddTaskDialog,
-} from './AddTask/AddTaskDialog'
-import { VisibilityToggleButton } from './AppBar/VisibilityToggleButton'
-import { NewTaskButton } from './AddTask/NewTaskButton'
+import { AppBar } from './AppBar'
+import { TaskList } from './TaskList'
+import { AddTaskDialog, NewTaskData, useAddTaskDialog } from './AddTaskDialog'
+import { VisibilityToggleButton } from './VisibilityToggleButton'
+import { NewTaskButton } from './NewTaskButton'
 
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
