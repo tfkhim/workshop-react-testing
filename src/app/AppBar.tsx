@@ -12,7 +12,7 @@ export const AppBar: FC<PropsWithChildren> = ({ children }) => {
     <MuiAppBar position="sticky">
       <Container>
         <Toolbar disableGutters>
-          <Logo />
+          <Logo aria-label="logo" />
           <ApplicationName />
           <ActionsContainer>{children}</ActionsContainer>
         </Toolbar>
@@ -29,7 +29,7 @@ const Logo = styled(LogoIcon)(
 
 const ApplicationName: FC = () => {
   return (
-    <Typography component="span" variant="h4" sx={{ flexGrow: 1 }}>
+    <Typography variant="h4" sx={{ flexGrow: 1 }}>
       Tasks
     </Typography>
   )
