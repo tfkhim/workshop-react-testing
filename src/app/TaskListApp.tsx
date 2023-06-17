@@ -25,28 +25,7 @@ export type Task = {
   dueDate: Date | null
 }
 
-const initialTasks = [
-  {
-    id: crypto.randomUUID(),
-    done: true,
-    description: 'first task',
-    dueDate: new Date(),
-  },
-  {
-    id: crypto.randomUUID(),
-    done: false,
-    description: 'second task',
-    dueDate: null,
-  },
-  {
-    id: crypto.randomUUID(),
-    done: false,
-    description: 'third task',
-    dueDate: new Date(2022, 7, 3),
-  },
-]
-
-export const TodoListApp: FC = () => {
+export const TaskListApp: FC = () => {
   const preferseDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
   const colorScheme = preferseDarkMode ? 'dark' : 'light'
   const theme = useMemo(
@@ -62,7 +41,7 @@ export const TodoListApp: FC = () => {
     [colorScheme]
   )
 
-  const [tasks, setTasks] = useState<Task[]>(initialTasks)
+  const [tasks, setTasks] = useState<Task[]>([])
   const [showAllEntries, setShowAllEntries] = useState(false)
 
   const toggleVisibility = useCallback(
