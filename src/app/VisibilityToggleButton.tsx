@@ -14,7 +14,11 @@ export const VisibilityToggleButton: FC<VisibilityToggleButtonProps> = ({
   onToggle,
 }) => {
   return (
-    <IconButton onClick={onToggle} color="inherit">
+    <IconButton
+      onClick={onToggle}
+      color="inherit"
+      aria-label="toggle visibility"
+    >
       {visible ? <VisibileIcon /> : <InvisibleIcon />}
     </IconButton>
   )

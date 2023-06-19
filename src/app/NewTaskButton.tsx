@@ -8,7 +8,7 @@ export type NewTaskButtonProps = {
 
 export const NewTaskButton: FC<NewTaskButtonProps> = ({ onClick }) => {
   return (
-    <IconButton onClick={onClick} color="inherit">
+    <IconButton onClick={onClick} color="inherit" aria-label="add new task">
       <NewTaskIcon />
     </IconButton>
   )
