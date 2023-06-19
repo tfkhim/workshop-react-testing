@@ -5,31 +5,31 @@ import { TaskListApp } from '../app/TaskListApp'
 import { queries } from '../testUtils'
 
 it('should display a logo', () => {
-  TaskListAppModel.create()
+  TaskListAppModel.setup()
 
   expect(screen.getByLabelText('logo')).toBeVisible()
 })
 
 it('should display the application name', () => {
-  TaskListAppModel.create()
+  TaskListAppModel.setup()
 
   expect(screen.getByRole('heading')).toHaveTextContent('Tasks')
 })
 
 it('should display a toggle visibility button', () => {
-  const app = TaskListAppModel.create()
+  const app = TaskListAppModel.setup()
 
   expect(app.getToggleVisibilityButton()).toBeVisible()
 })
 
 it('should display an add task button', () => {
-  const app = TaskListAppModel.create()
+  const app = TaskListAppModel.setup()
 
   expect(app.getAddNewTaskButton()).toBeVisible()
 })
 
 it('should be possible to add new tasks', async () => {
-  const app = TaskListAppModel.create()
+  const app = TaskListAppModel.setup()
 
   await app.addTask('New Task', '11022022')
 
@@ -37,7 +37,7 @@ it('should be possible to add new tasks', async () => {
 })
 
 it('should be possible to complete a task', async () => {
-  const app = TaskListAppModel.create()
+  const app = TaskListAppModel.setup()
 
   await app.addTask('New Task', '11022022')
   await app.completeTask('New Task')
@@ -46,7 +46,7 @@ it('should be possible to complete a task', async () => {
 })
 
 it('should be possible to toggle visibility of a task', async () => {
-  const app = TaskListAppModel.create()
+  const app = TaskListAppModel.setup()
 
   await app.addTask('New Task', '11022022')
   await app.completeTask('New Task')
@@ -56,7 +56,7 @@ it('should be possible to toggle visibility of a task', async () => {
 })
 
 class TaskListAppModel {
-  public static create(): TaskListAppModel {
+  public static setup(): TaskListAppModel {
     return new TaskListAppModel()
   }
 
