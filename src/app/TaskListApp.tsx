@@ -7,6 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import Container from '@mui/material/Container'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { v4 as uuidv4 } from 'uuid'
 import { AppBar } from './AppBar'
 import { TaskList } from './TaskList'
 import { AddTaskDialog, NewTaskData, useAddTaskDialog } from './AddTaskDialog'
@@ -53,7 +54,7 @@ export const TaskListApp: FC = () => {
     (task: NewTaskData) =>
       setTasks((oldTasks) => [
         ...oldTasks,
-        { id: crypto.randomUUID(), done: false, ...task },
+        { id: uuidv4(), done: false, ...task },
       ]),
     [setTasks]
   )
