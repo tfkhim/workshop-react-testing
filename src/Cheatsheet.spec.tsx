@@ -345,7 +345,7 @@ describe('Advanced', () => {
   // Wait for an element to disappear. The callback must return an
   // element, list of elements or null. It may also throw an
   // exception if the element is not present. So you can use the
-  // getBy*, queryBy*, getAllBy* and queryAllByÜ function families.
+  // getBy*, queryBy*, getAllBy* and queryAllBy* function families.
   // The waitForElementToBeRemoved method will throw an error if the
   // element is already removed during the initial execution of the
   // callback.
