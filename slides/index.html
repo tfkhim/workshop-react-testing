@@ -20,10 +20,9 @@
           <h1>Agenda</h1>
           <ul>
             <li>Introduction to web frontend testing</li>
-            <li>Warmup exercise</li>
             <li>React Testing Library</li>
-            <li>Exercise</li>
             <li>Tips & Tricks to improve testability</li>
+            <li>Exercise</li>
           </ul>
 
           <aside class="notes" data-markdown>
@@ -228,28 +227,42 @@
         </section>
 
         <section>
-          <h1>Usage</h1>
+          <section>
+            <h1>Usage</h1>
 
-          <p>Render components</p>
+            <p>Render components</p>
 
-          <pre><code class="language-tsx" data-trim><script type="text/template">
-            import { render } from '@testing-library/react'
+            <pre><code class="language-tsx" data-trim><script type="text/template">
+              import { render } from '@testing-library/react'
 
-            const onClick = () => {}
-            const { getByRole, queryByRole, findByRole } = render(
-              <button onClick={onClick}>Press me</button>
-            )
-          </script></code></pre>
+              test('render', () => {
+                const onClick = () => {}
+                const { getByRole, queryByRole, findByRole } = render(
+                  <button onClick={onClick}>Press me</button>
+                )
+              })
+            </script></code></pre>
 
-          <p>Querying the DOM</p>
+            <p>Cleanup</p>
 
-          <pre><code class="language-tsx" data-trim>
-            import { screen } from '@testing-library/react'
+            <pre><code class="language-tsx" data-trim><script type="text/template">
+              import { cleanup } from '@testing-library/react'
 
-            const button = screen.getByRole('button')
-            const heading = screen.queryByRole('heading')
-            const awaitedButton = await screen.findByRole('button')
-          </code></pre>
+              afterEach(cleanup)
+            </script></code></pre>
+          </section>
+
+          <section>
+            <p>Querying the DOM</p>
+
+            <pre><code class="language-tsx" data-trim>
+              import { screen } from '@testing-library/react'
+
+              const button = screen.getByRole('button')
+              const heading = screen.queryByRole('heading')
+              const awaitedButton = await screen.findByRole('button')
+            </code></pre>
+          </section>
         </section>
 
         <section>
@@ -332,15 +345,30 @@
         </section>
 
         <section>
-          <h1>Cheatsheet</h1>
+          <h1>Testing hooks</h1>
 
-          <p>src/Cheatsheet.spec.tsx</p>
+          <pre><code class="language-tsx" data-trim><script type="text/template">
+            // Import this from @testing-library/react
+            // or you might get warnings
+            import { act, renderHook } from '@testing-library/react'
+
+            const { result } = renderHook(() => {
+              const [state, setState] = useState(0)
+              return { state, setState }
+            })
+
+            expect(result.current.state).toStrictEqual(0)
+
+            act(() => result.current.setState(1))
+
+            expect(result.current.state).toStrictEqual(1)
+          </script></code></pre>
         </section>
 
         <section>
-          <h1>Exercise</h1>
+          <h1>Cheatsheet</h1>
 
-          <p>src/exercises/01-testing-components</p>
+          <p>src/Cheatsheet.spec.tsx</p>
         </section>
 
         <section>
@@ -559,27 +587,6 @@
           </section>
 
           <section>
-            <h1>Testing hooks</h1>
-
-            <pre><code class="language-tsx" data-trim><script type="text/template">
-              // Import this from @testing-library/react
-              // or you might get warnings
-              import { act, renderHook } from '@testing-library/react'
-
-              const { result } = renderHook(() => {
-                const [state, setState] = useState(0)
-                return { state, setState }
-              })
-
-              expect(result.current.state).toStrictEqual(0)
-
-              act(() => result.current.setState(1))
-
-              expect(result.current.state).toStrictEqual(1)
-            </script></code></pre>
-          </section>
-
-          <section>
             <h1>Example</h1>
             <p>src/showcases/ModelViewViewModel.spec.tsx</p>
           </section>
@@ -605,13 +612,9 @@
         </section>
 
         <section>
-          <h1>Ideas for future workshops</h1>
+          <h1>Exercise</h1>
 
-          <ul>
-            <li>Integration tests with Playwright</li>
-            <li>Component tests with Playwright</li>
-            <li>Visual appearance tests</li>
-          </ul>
+          <p>src/exercises</p>
         </section>
       </div>
     </div>
