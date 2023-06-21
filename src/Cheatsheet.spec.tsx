@@ -1,7 +1,9 @@
 import { FC, PropsWithChildren, useEffect, useState } from 'react'
 import {
+  act,
   cleanup,
   render,
+  renderHook,
   waitFor,
   waitForElementToBeRemoved,
   within,
@@ -382,6 +384,18 @@ describe('Advanced', () => {
 
     expect(firstButton).toHaveTextContent('Button 1')
   })
+
+  // The renderHook function allows you to render a custom hook
+  // without needing to create a test component.
+  test('Render custom hook', () => {
+    const { result } = renderHook(useCounter)
+
+    expect(result.current.count).toStrictEqual(0)
+
+    act(result.current.increment)
+
+    expect(result.current.count).toStrictEqual(1)
+  })
 })
 
 // ---------------------------------------------------------
@@ -419,4 +433,18 @@ const ShowOrHideAfterSomeTime: FC<
 
 function noop() {
   return
+}
+
+function useCounter(): {
+  count: number
+  increment: () => void
+  decrement: () => void
+} {
+  const [count, setCount] = useState(0)
+
+  return {
+    count,
+    increment: () => setCount((oldCount) => oldCount + 1),
+    decrement: () => setCount((oldCount) => oldCount - 1),
+  }
 }
