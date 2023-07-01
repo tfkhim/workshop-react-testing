@@ -4,7 +4,7 @@ import {
   NewTaskData,
   UseAddTaskDialogProps,
   useAddTaskDialog,
-} from '../app/AddTaskDialog'
+} from '../../app/AddTaskDialog'
 
 it('should not initially show the dialog', () => {
   const { dialogProps } = givenRenderedUseAddTaskDialogHook()

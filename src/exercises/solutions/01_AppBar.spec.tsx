@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { expect, it } from 'vitest'
-import { AppBar } from '../app/AppBar'
+import { AppBar } from '../../app/AppBar'
 
 it('should display a logo', () => {
   givenRenderedAppBar()

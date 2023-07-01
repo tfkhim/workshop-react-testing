@@ -1,8 +1,8 @@
 import { RenderResult, render, screen, within } from '@testing-library/react'
 import { expect, it } from 'vitest'
 import userEvent from '@testing-library/user-event'
-import { TaskListApp } from '../app/TaskListApp'
-import { queries } from '../testUtils'
+import { TaskListApp } from '../../app/TaskListApp'
+import { queries } from '../../testUtils'
 
 it('should display a logo', () => {
   TaskListAppModel.setup()

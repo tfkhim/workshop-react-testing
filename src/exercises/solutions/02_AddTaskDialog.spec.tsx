@@ -3,7 +3,7 @@ import { Mock, expect, it, vi } from 'vitest'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import userEvent from '@testing-library/user-event'
-import { AddTaskDialog, NewTaskData } from '../app/AddTaskDialog'
+import { AddTaskDialog, NewTaskData } from '../../app/AddTaskDialog'
 
 it('should display the dialog if opened', () => {
   givenOpenedDialog()
