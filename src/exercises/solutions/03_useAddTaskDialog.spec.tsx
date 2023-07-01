@@ -28,23 +28,20 @@ it('should close the dialog when asked to', () => {
   expect(dialogProps.open).toStrictEqual(false)
 })
 
+it('should close the dialog after adding a task', () => {
+  givenOpenedDialog()
+
+  const { dialogProps } = whenAddTask(taskData)
+
+  expect(dialogProps.open).toStrictEqual(false)
+})
+
 it('should notify about added task', () => {
   const { onAddNewTask } = givenOpenedDialog()
 
   whenAddTask(taskData)
 
   expect(onAddNewTask).toHaveBeenCalledWith(taskData)
-})
-
-it('should close the dialog after adding a task', () => {
-  givenOpenedDialog()
-
-  const { dialogProps } = whenAddTask({
-    dueDate: new Date(2021, 2, 1),
-    description: 'My new task',
-  })
-
-  expect(dialogProps.open).toStrictEqual(false)
 })
 
 const taskData = {
