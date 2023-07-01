@@ -417,7 +417,9 @@ describe('Advanced', () => {
   // The renderHook function allows you to render a custom hook
   // without needing to create a test component.
   test('Render custom hook', () => {
-    const { result } = renderHook(useCounter)
+    const { result } = renderHook(useCounter, {
+      initialProps: { initialValue: 0 },
+    })
 
     expect(result.current.count).toStrictEqual(0)
 
@@ -464,12 +466,12 @@ function noop() {
   return
 }
 
-function useCounter(): {
+function useCounter({ initialValue }: { initialValue: number }): {
   count: number
   increment: () => void
   decrement: () => void
 } {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(initialValue)
 
   return {
     count,
