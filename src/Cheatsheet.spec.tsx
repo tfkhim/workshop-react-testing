@@ -1,4 +1,10 @@
-import { FC, PropsWithChildren, useEffect, useState } from 'react'
+import {
+  FC,
+  KeyboardEvent,
+  PropsWithChildren,
+  useEffect,
+  useState,
+} from 'react'
 import {
   act,
   cleanup,
@@ -313,6 +319,29 @@ describe('Interaction', () => {
     await user.type(input, 'Hello')
 
     expect(input).toHaveDisplayValue('Hello')
+  })
+
+  // With the keyboard API you can simulate arbitrary key
+  // presses. You can specify special keys by key or code
+  // values. For using a key value you must enclose the
+  // value in {} (e.g. {Escape}). If you want to use a
+  // code value you must enclose the value in [] (e.g.
+  // [KeyF]).
+  // See: https://testing-library.com/docs/user-event/keyboard
+  //
+  // Possible values:
+  //   * Keys: https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
+  //   * Codes: https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values
+  test('Press a key', async () => {
+    const onKeyDown = vi.fn<[KeyboardEvent], void>()
+    const user = userEvent.setup()
+    render(<input type="text" onKeyDown={onKeyDown} autoFocus />)
+
+    await user.keyboard('{Escape}')
+
+    expect(onKeyDown).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'Escape', code: 'Escape' })
+    )
   })
 })
 
