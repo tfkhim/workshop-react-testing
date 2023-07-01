@@ -78,10 +78,6 @@ class TaskListAppModel {
     return this.view.getByLabelText('toggle visibility')
   }
 
-  public async openAddTaskDialog(): Promise<void> {
-    await this.user.click(this.getAddNewTaskButton())
-  }
-
   public async addTask(description: string, dueDate?: string): Promise<void> {
     await this.openAddTaskDialog()
     await this.user.type(screen.getByLabelText('Description'), description)
@@ -91,21 +87,25 @@ class TaskListAppModel {
     await this.user.click(screen.getByRole('button', { name: 'Add' }))
   }
 
+  private async openAddTaskDialog(): Promise<void> {
+    await this.user.click(this.getAddNewTaskButton())
+  }
+
   public async completeTask(text: string): Promise<void> {
-    const task = await this.view.findListItemByChildText(text)
+    const task = await this.waitForListItem(text)
     const checkbox = within(task).getByRole('checkbox')
     await this.user.click(checkbox)
   }
 
-  public async toggleVisibility(): Promise<void> {
-    await this.user.click(this.getToggleVisibilityButton())
+  public async waitForListItem(text: string): Promise<HTMLElement> {
+    return await this.view.findListItemByChildText(text)
   }
 
   public queryListItem(text: string): HTMLElement | null {
     return this.view.queryListItemByChildText(text)
   }
 
-  public async waitForListItem(text: string): Promise<HTMLElement> {
-    return await this.view.findListItemByChildText(text)
+  public async toggleVisibility(): Promise<void> {
+    await this.user.click(this.getToggleVisibilityButton())
   }
 }
