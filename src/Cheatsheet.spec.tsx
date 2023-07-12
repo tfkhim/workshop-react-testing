@@ -17,6 +17,28 @@ import {
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 
+/**
+ * This file contains examples for a lot of Testing Library functionality. It
+ * contains a superset of the functionality you need for solving the exercises.
+ * The following list should help you find the examples that are relevant for
+ * the exercises:
+ *
+ *  - The whole 'Different query types' test suit
+ *  - The following selectors tests:
+ *    - By element role
+ *    - By element role and accessible name
+ *    - By label text
+ *    - By text
+ *  - The following assertion tests:
+ *    - Element has specific text content
+ *    - Element is visible
+ *    - Element is in the document
+ *  - The whole 'Interaction' test suit
+ *  - The following advanced tests:
+ *    - Query within a sub element
+ *    - Render custom hook
+ */
+
 afterEach(() => {
   // Remove any created DOM nodes to start each test case
   // with a clean document. The call to cleanup here is
