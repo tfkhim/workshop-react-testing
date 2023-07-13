@@ -280,10 +280,6 @@
               expect(element).toBeVisible()
               expect(element).toBeEnabled()
               expect(element).toHaveFocus()
-
-              await waitFor(() => {
-                expect(screen.getByText('Hello World!')).toBeVisible()
-              })
             </code></pre>
           </section>
         </section>
